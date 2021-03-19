@@ -1,5 +1,10 @@
 <template>
   <div>
+    <form>
+      <div v-if="submitLoading">{{ submitErrors.message }}</div>
+      <div>formの内容</div>
+      <button :disabled="submitLoading" @click="onSubmitClicked">送信する</button>
+    </form>
   </div>
 </template>
 <script>
