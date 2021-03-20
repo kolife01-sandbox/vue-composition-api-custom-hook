@@ -14,5 +14,37 @@ type ApiErrorResponse = {
 }
 
 export type useApi = {
-  <T>(apiFunc: ()=> Promise<T>): useApiResult<T>
+  <T>(apiFunc: ()=> Promise<T>): useApiResult<T>;
+}
+
+export const useApi: useApi = (apiFunc) => {
+  const state = reactive<{
+    errors: ApiErrorResponse | null;
+    loading: boolean
+  }>({
+    errors: null,
+    loading: false
+  })
+  const handleApi = async () => {
+    state.loading = true
+    return await apiFunc().then((apiResponse) => {
+      state.errors = null
+      return apiResponse
+    })
+    .catch((err: AxiosError) => {
+      state.errors = {
+        message: err.response?.data?.message,
+        status: err.response?.status || 500,
+        reason: err.response?.data,
+      }
+      return null
+    })
+    .finally(()=> {
+      state.loading = false
+    })
+  }
+  return {
+    handleApi,
+    ...toRefs(state)
+  }
 }
