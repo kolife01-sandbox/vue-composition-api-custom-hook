@@ -3,7 +3,7 @@ import { AxiosError } from 'axios'
 
 type useApiResult<T> = {
   handleApi: () => Promise<T | null>
-  errors: Ref<ApiErrorResponse>
+  errors: Ref<ApiErrorResponse | null>
   loading: Ref<boolean>
 }
 
